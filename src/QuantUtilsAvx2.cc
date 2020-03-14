@@ -273,9 +273,14 @@ void RequantizeFixedPointAvx2(
 
     clipped_v = _mm256_shuffle_epi8(clipped_v, shuffle_mask_v);
     clipped_v = _mm256_permutevar8x32_epi32(clipped_v, permute_mask_v);
+#if defined(_M_X64)
     *(int64_t*)(dst + i) = _mm256_extract_epi64(clipped_v, 0);
+#else
+    *(int32_t*)(dst + i) = _mm256_extract_epi32(clipped_v, 0);
+#endif
   }
 
+#if defined(_M_X64)
   for (; i < len; ++i) {
     int64_t ab_64 =
         static_cast<int64_t>(src[i]) * static_cast<int64_t>(params.multiplier);
@@ -284,6 +289,17 @@ void RequantizeFixedPointAvx2(
         ((ab_64 + nudge) >> params.right_shift);
     dst[i] = std::min<int64_t>(std::max<int64_t>(quantized_down, 0l), 255l);
   }
+#else
+  for (; i < len; ++i) {
+    int32_t ab_64 =
+        static_cast<int32_t>(src[i]) * static_cast<int32_t>(params.multiplier);
+    int32_t nudge = 1ll << std::max(0, params.right_shift - 1);
+    int32_t quantized_down = params.target_qparams.zero_point +
+        ((ab_64 + nudge) >> params.right_shift);
+    dst[i] = std::min<int32_t>(std::max<int32_t>(quantized_down, 0l), 255l);
+  }
+
+#endif
 }
 #endif
 

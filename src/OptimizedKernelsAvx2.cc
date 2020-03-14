@@ -122,6 +122,7 @@ void transpose_8rows(
     _mm_storel_epi64(
         reinterpret_cast<__m128i*>(dst + (j + 0) * ld_dst),
         _mm256_castsi256_si128(y0));
+#if defined(_M_X64)
     *reinterpret_cast<int64_t*>(dst + (j + 1) * ld_dst) =
         _mm256_extract_epi64(y0, 1);
     _mm_storel_epi64(
@@ -191,6 +192,77 @@ void transpose_8rows(
         _mm256_extract_epi64(y7, 2);
     *reinterpret_cast<int64_t*>(dst + (j + 31) * ld_dst) =
         _mm256_extract_epi64(y7, 3);
+#else
+    *reinterpret_cast<int32_t*>(dst + (j + 1) * ld_dst) =
+        _mm256_extract_epi32(y0, 1);
+    _mm_storel_epi64(
+        reinterpret_cast<__m128i*>(dst + (j + 2) * ld_dst),
+        _mm256_castsi256_si128(y1));
+    *reinterpret_cast<int32_t*>(dst + (j + 3) * ld_dst) =
+        _mm256_extract_epi32(y1, 1);
+    _mm_storel_epi64(
+        reinterpret_cast<__m128i*>(dst + (j + 4) * ld_dst),
+        _mm256_castsi256_si128(y2));
+    *reinterpret_cast<int32_t*>(dst + (j + 5) * ld_dst) =
+        _mm256_extract_epi32(y2, 1);
+    _mm_storel_epi64(
+        reinterpret_cast<__m128i*>(dst + (j + 6) * ld_dst),
+        _mm256_castsi256_si128(y3));
+    *reinterpret_cast<int32_t*>(dst + (j + 7) * ld_dst) =
+        _mm256_extract_epi32(y3, 1);
+    _mm_storel_epi64(
+        reinterpret_cast<__m128i*>(dst + (j + 8) * ld_dst),
+        _mm256_castsi256_si128(y4));
+    *reinterpret_cast<int32_t*>(dst + (j + 9) * ld_dst) =
+        _mm256_extract_epi32(y4, 1);
+    _mm_storel_epi64(
+        reinterpret_cast<__m128i*>(dst + (j + 10) * ld_dst),
+        _mm256_castsi256_si128(y5));
+    *reinterpret_cast<int32_t*>(dst + (j + 11) * ld_dst) =
+        _mm256_extract_epi32(y5, 1);
+    _mm_storel_epi64(
+        reinterpret_cast<__m128i*>(dst + (j + 12) * ld_dst),
+        _mm256_castsi256_si128(y6));
+    *reinterpret_cast<int32_t*>(dst + (j + 13) * ld_dst) =
+        _mm256_extract_epi32(y6, 1);
+    _mm_storel_epi64(
+        reinterpret_cast<__m128i*>(dst + (j + 14) * ld_dst),
+        _mm256_castsi256_si128(y7));
+    *reinterpret_cast<int32_t*>(dst + (j + 15) * ld_dst) =
+        _mm256_extract_epi32(y7, 1);
+    *reinterpret_cast<int32_t*>(dst + (j + 16) * ld_dst) =
+        _mm256_extract_epi32(y0, 2);
+    *reinterpret_cast<int32_t*>(dst + (j + 17) * ld_dst) =
+        _mm256_extract_epi32(y0, 3);
+    *reinterpret_cast<int32_t*>(dst + (j + 18) * ld_dst) =
+        _mm256_extract_epi32(y1, 2);
+    *reinterpret_cast<int32_t*>(dst + (j + 19) * ld_dst) =
+        _mm256_extract_epi32(y1, 3);
+    *reinterpret_cast<int32_t*>(dst + (j + 20) * ld_dst) =
+        _mm256_extract_epi32(y2, 2);
+    *reinterpret_cast<int32_t*>(dst + (j + 21) * ld_dst) =
+        _mm256_extract_epi32(y2, 3);
+    *reinterpret_cast<int32_t*>(dst + (j + 22) * ld_dst) =
+        _mm256_extract_epi32(y3, 2);
+    *reinterpret_cast<int32_t*>(dst + (j + 23) * ld_dst) =
+        _mm256_extract_epi32(y3, 3);
+    *reinterpret_cast<int32_t*>(dst + (j + 24) * ld_dst) =
+        _mm256_extract_epi32(y4, 2);
+    *reinterpret_cast<int32_t*>(dst + (j + 25) * ld_dst) =
+        _mm256_extract_epi32(y4, 3);
+    *reinterpret_cast<int32_t*>(dst + (j + 26) * ld_dst) =
+        _mm256_extract_epi32(y5, 2);
+    *reinterpret_cast<int32_t*>(dst + (j + 27) * ld_dst) =
+        _mm256_extract_epi32(y5, 3);
+    *reinterpret_cast<int32_t*>(dst + (j + 28) * ld_dst) =
+        _mm256_extract_epi32(y6, 2);
+    *reinterpret_cast<int32_t*>(dst + (j + 29) * ld_dst) =
+        _mm256_extract_epi32(y6, 3);
+    *reinterpret_cast<int32_t*>(dst + (j + 30) * ld_dst) =
+        _mm256_extract_epi32(y7, 2);
+    *reinterpret_cast<int32_t*>(dst + (j + 31) * ld_dst) =
+        _mm256_extract_epi32(y7, 3);
+#endif
   }
 
   // scalar loop for remainder
